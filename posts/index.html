@@ -92,27 +92,11 @@
     
       
         
-          <li><a href="/posts/goisforlovers/">(Hu)go Template Primer</a></li>
+          <li><a href="/about">My Journey</a></li>
         
       
         
-          <li><a href="/posts/hugoisforlovers/">Getting Started with Hugo</a></li>
-        
       
-      
-        <ul class="menu__sub-inner">
-          <li class="menu__sub-inner-more-trigger">Links ▾</li>
-
-          <ul class="menu__sub-inner-more hidden">
-            
-              
-                <li><a href="/about">My Journey</a></li>
-              
-            
-              
-            
-          </ul>
-        </ul>
       
     
 
@@ -120,14 +104,6 @@
   </ul>
 
   <ul class="menu__inner menu__inner--mobile">
-    
-      
-        <li><a href="/posts/goisforlovers/">(Hu)go Template Primer</a></li>
-      
-    
-      
-        <li><a href="/posts/hugoisforlovers/">Getting Started with Hugo</a></li>
-      
     
       
         <li><a href="/about">My Journey</a></li>
@@ -150,11 +126,11 @@
     
       <div class="post on-list">
         <h1 class="post-title">
-          <a href="https://npsoni.com/posts/migrate-from-jekyll/">Migrate to Hugo from Jekyll</a>
+          <a href="https://npsoni.com/posts/custom-rbacs-kubernetes-persistent-volumes/">Creating custom roles in kubernetes for PersistentVolume access</a>
         </h1>
         <div class="post-meta">
           <span class="post-date">
-            2014-03-10
+            2021-03-19
           </span>
           
         </div>
@@ -166,9 +142,9 @@
         <div class="post-content">
           
           
-          Move static content to static Jekyll has a rule that any directory not starting with _ will be copied as-is to the _site output. Hugo keeps all static content under static. You should therefore move it all there. With Jekyll, something that looked like
-▾ &lt;root&gt;/ ▾ images/ logo.png  should become
-▾ &lt;root&gt;/ ▾ static/ ▾ images/ logo.png  Additionally, you’ll want any files that should reside at the root (such as CNAME) to be moved to static.
+          Creating custom roles in kubernetes for different requirements =======================
+There are plenty of occassions when the default kubernetes/openshift roles / clusterroles don’t have the specific permissions that you need to assign to users. I recently faced similar situation where the development teams wanted to be able to setup their on PersistentVolumes and PersistentVolumeClaims. However, PersistentVolumes are cluster-scoped object so namespace-scoped users can’t actually interact with them.
+This was a business requirement so I had to setup a custom clusterrole that will let users setup their own persistentvolumes.
           
           
         </div>
@@ -176,101 +152,7 @@
         
         <div>
           <a class="read-more button"
-            href="/posts/migrate-from-jekyll/">[Click To Continue Reading...] →</a>
-        </div>
-        
-      </div>
-    
-      <div class="post on-list">
-        <h1 class="post-title">
-          <a href="https://npsoni.com/posts/goisforlovers/">(Hu)go Template Primer</a>
-        </h1>
-        <div class="post-meta">
-          <span class="post-date">
-            2014-04-02
-          </span>
-          
-        </div>
-
-        
-          <span class="post-tags">
-            
-            #<a href="https://npsoni.com/tags/go/">go</a>&nbsp;
-            
-            #<a href="https://npsoni.com/tags/golang/">golang</a>&nbsp;
-            
-            #<a href="https://npsoni.com/tags/templates/">templates</a>&nbsp;
-            
-            #<a href="https://npsoni.com/tags/themes/">themes</a>&nbsp;
-            
-            #<a href="https://npsoni.com/tags/development/">development</a>&nbsp;
-            
-          </span>
-        
-
-        
-
-        <div class="post-content">
-          
-          
-          Hugo uses the excellent Go html/template library for its template engine. It is an extremely lightweight engine that provides a very small amount of logic. In our experience that it is just the right amount of logic to be able to create a good static website. If you have used other template systems from different languages or frameworks you will find a lot of similarities in Go templates.
-This document is a brief primer on using Go templates.
-          
-          
-        </div>
-
-        
-        <div>
-          <a class="read-more button"
-            href="/posts/goisforlovers/">[Click To Continue Reading...] →</a>
-        </div>
-        
-      </div>
-    
-      <div class="post on-list">
-        <h1 class="post-title">
-          <a href="https://npsoni.com/posts/hugoisforlovers/">Getting Started with Hugo</a>
-        </h1>
-        <div class="post-meta">
-          <span class="post-date">
-            2014-04-02
-          </span>
-          
-        </div>
-
-        
-          <span class="post-tags">
-            
-            #<a href="https://npsoni.com/tags/go/">go</a>&nbsp;
-            
-            #<a href="https://npsoni.com/tags/golang/">golang</a>&nbsp;
-            
-            #<a href="https://npsoni.com/tags/hugo/">hugo</a>&nbsp;
-            
-            #<a href="https://npsoni.com/tags/development/">development</a>&nbsp;
-            
-          </span>
-        
-
-        
-
-        <div class="post-content">
-          
-          
-          Step 1. Install Hugo Go to Hugo releases and download the appropriate version for your OS and architecture.
-Save it somewhere specific as we will be using it in the next step.
-More complete instructions are available at Install Hugo
-Step 2. Build the Docs Hugo has its own example site which happens to also be the documentation site you are reading right now.
-Follow the following steps:
-Clone the Hugo repository Go into the repo Run hugo in server mode and build the docs Open your browser to http://localhost:1313  Corresponding pseudo commands:
-          
-          
-        </div>
-
-        
-        <div>
-          <a class="read-more button"
-            href="/posts/hugoisforlovers/">[Click To Continue Reading...] →</a>
+            href="/posts/custom-rbacs-kubernetes-persistent-volumes/">[Click To Continue Reading...] →</a>
         </div>
         
       </div>

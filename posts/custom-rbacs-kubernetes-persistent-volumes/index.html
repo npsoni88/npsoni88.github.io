@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Creating custom roles in kubernetes for PersistentVolume access :: SRE / DevOps references and thoughts</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Creating custom roles in kubernetes for different requirements =======================
+There are plenty of occassions when the default kubernetes/openshift roles / clusterroles don&amp;rsquo;t have the specific permissions that you need to assign to users. I recently faced similar situation where the development teams wanted to be able to setup their on PersistentVolumes and PersistentVolumeClaims. However, PersistentVolumes are cluster-scoped object so namespace-scoped users can&amp;rsquo;t actually interact with them.
+This was a business requirement so I had to setup a custom clusterrole that will let users setup their own persistentvolumes." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://npsoni.com/posts/custom-rbacs-kubernetes-persistent-volumes/" />
+
+
+
+
+<link rel="stylesheet" href="https://npsoni.com/assets/style.css">
+
+  <link rel="stylesheet" href="https://npsoni.com/assets/green.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon" href="https://npsoni.com/img/apple-touch-icon-192x192.png">
+
+  <link rel="shortcut icon" href="https://npsoni.com/img/favicon/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Creating custom roles in kubernetes for PersistentVolume access">
+<meta property="og:description" content="Creating custom roles in kubernetes for different requirements =======================
+There are plenty of occassions when the default kubernetes/openshift roles / clusterroles don&amp;rsquo;t have the specific permissions that you need to assign to users. I recently faced similar situation where the development teams wanted to be able to setup their on PersistentVolumes and PersistentVolumeClaims. However, PersistentVolumes are cluster-scoped object so namespace-scoped users can&amp;rsquo;t actually interact with them.
+This was a business requirement so I had to setup a custom clusterrole that will let users setup their own persistentvolumes." />
+<meta property="og:url" content="https://npsoni.com/posts/custom-rbacs-kubernetes-persistent-volumes/" />
+<meta property="og:site_name" content="SRE / DevOps references and thoughts" />
+
+  
+    <meta property="og:image" content="https://npsoni.com/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+  <meta property="article:section" content="kubernetes" />
+
+  <meta property="article:section" content="openshift" />
+
+
+  <meta property="article:published_time" content="2021-03-19 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Nishant Soni
+  </div>
+</a>
+
+    </div>
+    
+      <div class="menu-trigger">menu</div>
+    
+  </div>
+  
+    <nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="/about">My Journey</a></li>
+        
+      
+        
+      
+      
+    
+
+    
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="/about">My Journey</a></li>
+      
+    
+      
+    
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="https://npsoni.com/posts/custom-rbacs-kubernetes-persistent-volumes/">Creating custom roles in kubernetes for PersistentVolume access</a></h1>
+  <div class="post-meta">
+    
+      <span class="post-date">
+        2021-03-19 
+      </span>
+    
+    
+  </div>
+
+  
+
+  
+
+  
+
+  <div class="post-content"><div>
+        <h2 id="creating-custom-roles-in-kubernetes-for-different-requirements">Creating custom roles in kubernetes for different requirements<a href="#creating-custom-roles-in-kubernetes-for-different-requirements" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>=======================</p>
+<p>There are plenty of occassions when the default kubernetes/openshift roles / clusterroles don&rsquo;t have the specific permissions that you need to assign to users. I recently faced similar situation where the development teams wanted to be able to setup their on PersistentVolumes and PersistentVolumeClaims. However, PersistentVolumes are cluster-scoped object so namespace-scoped users can&rsquo;t actually interact with them.</p>
+<p>This was a business requirement so I had to setup a custom clusterrole that will let users setup their own persistentvolumes. So in this quick write up, here are a few things we&rsquo;re going to go through.</p>
+<ul>
+<li><strong>Roles vs ClusterRoles</strong></li>
+<li><strong>Breaking down roles/clusterroles YAML file</strong></li>
+<li><strong>Example yaml that I setup for my use-cases</strong></li>
+</ul>
+<h3 id="understanding-roles-vs-clusterroles">Understanding Roles vs ClusterRoles<a href="#understanding-roles-vs-clusterroles" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>=======================</p>
+<p>Its pretty straight-forward. Roles are namespace-scoped object while ClusterRoles are cluster-scoped objects. So there are a few things to understand here.</p>
+<ol>
+<li>Roles essentially mean the set of permissions that you want to define. Think of it as a &ldquo;policy&rdquo; in AWS IAM.So this is where you simply define what permissions you need. For example &ldquo;view access to volumes&rdquo;, &ldquo;edit access to deployments&rdquo; and so on.</li>
+<li>Roles can be attached to a user, a serviceaccount and so on. One key thing to be aware of is the permissions defined in &ldquo;roles&rdquo; are limited to the specific namesapce.</li>
+<li>Similarly, clusterroles do exactly what roles do, just on the cluster-level. Meaning, if you setup an &ldquo;admin&rdquo; cluster-role, it would mean that the user is a cluster level admin and can interact with all the namespaces (projects in openshift) in the cluster.</li>
+<li>Like roles, clusterroles can be attached to users.</li>
+<li>Just to summarize, roles/clusterroles are simply set of permissions that can be attached to users, serviceaccounts and so on. Based on the permissiosn defined in the roles, users would be able to execute the tasks while logged into Kubernetes / Openshift.</li>
+<li>Multiple roles/clusterroles can be attached to a single user or a group.</li>
+</ol>
+<h3 id="breaking-down-the-yaml-file">Breaking down the yaml file<a href="#breaking-down-the-yaml-file" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>=======================</p>
+<h4 id="role-yaml-file">Role yaml file<a href="#role-yaml-file" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>Take a moment and go throug the following yaml file.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Role </span> <span style="color:#75715e">#You&#39;re setting up a namespace-scoped role</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">default</span> <span style="color:#75715e">#Which namespace is this role for</span>
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">pod-reader </span> <span style="color:#75715e">#Name of the role</span>
+<span style="color:#f92672">rules</span>:
+- <span style="color:#f92672">apiGroups</span>: [<span style="color:#e6db74">&#34;&#34;</span>] <span style="color:#75715e"># &#34;&#34; indicates the core API group</span>
+  <span style="color:#f92672">resources</span>: [<span style="color:#e6db74">&#34;pods&#34;</span>] <span style="color:#75715e"># You want to define permissions for pod</span>
+  <span style="color:#f92672">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>, <span style="color:#e6db74">&#34;watch&#34;</span>, <span style="color:#e6db74">&#34;list&#34;</span>]
+</code></pre></div><p>So basically, the idea here is that you name the objects in &ldquo;resources&rdquo; and set of permissions in &ldquo;verbs&rdquo;. There&rsquo;s obviously an &ldquo;apiGroups&rdquo; which may change depending on what type of permissions are you trying to set. However, for majority of native kubernetes objects, it would be [&quot;&quot;].</p>
+<p>So in this example, the role has [&ldquo;get&rdquo;,&ldquo;watch&rdquo;,&ldquo;list&rdquo;] verbs for the resouce called &ldquo;pods&rdquo;. It means, once you attach this role to a user, he/she will only be able to have &ldquo;view-only&rdquo; access. They would not be able to setup new pods / modify existing pods or delete existing pods.</p>
+<p>Now, you may have a question, &ldquo;Nishant, what if I want the user to be able to setup new pods as well BUT not be able to delete them&rdquo;. Well, there are a bunch of verbs that you can use with the resources of the apiGroups. Here&rsquo;s a full list.</p>
+<ul>
+<li>get</li>
+<li>list</li>
+<li>watch</li>
+<li>create</li>
+<li>update</li>
+<li>patch</li>
+<li>delete</li>
+</ul>
+<p>So depending on your requirement, you can allow add the &ldquo;create/update&rdquo; permissions in the list of the verbs.</p>
+<h3 id="example-yaml-that-i-setup-for-my-use-cases">Example yaml that I setup for my use-cases<a href="#example-yaml-that-i-setup-for-my-use-cases" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>=======================</p>
+<p>In my case, I had to allow certain users to be able to setup their own persistent volumes as well as persistent volume claims so that they don&rsquo;t have to depend on our team everytime they need it. However, its not a standard feature or there is no inbuilt role to separately allow it. That&rsquo;s where I had to create a custom RBAC.</p>
+<p>This is what the yaml file looks like.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ClusterRole</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">annotations</span>:
+    <span style="color:#f92672">rbac.authorization.kubernetes.io/autoupdate</span>: <span style="color:#e6db74">&#34;true&#34;</span>
+  <span style="color:#f92672">labels</span>:
+    <span style="color:#f92672">kubernetes.io/bootstrapping</span>: <span style="color:#ae81ff">rbac-defaults</span>
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">volumes-access</span>
+<span style="color:#f92672">rules</span>:
+- <span style="color:#f92672">apiGroups</span>:
+  - <span style="color:#e6db74">&#34;&#34;</span>
+  <span style="color:#f92672">resources</span>:
+  - <span style="color:#ae81ff">persistentvolumes</span>
+  - <span style="color:#ae81ff">persistentvolumeclaims</span>
+  - <span style="color:#ae81ff">persistentvolumeclaims/status</span>
+  <span style="color:#f92672">verbs</span>:
+  - <span style="color:#ae81ff">create</span>
+  - <span style="color:#ae81ff">delete</span>
+  - <span style="color:#ae81ff">get</span>
+  - <span style="color:#ae81ff">list</span>
+  - <span style="color:#ae81ff">watch</span>
+  - <span style="color:#ae81ff">update</span>
+</code></pre></div><p>So in this case, I am referring to the resources &ldquo;persistentvolumes&rdquo;, &ldquo;persistentvolumeclaims&rdquo; and &ldquo;status&rdquo;. The users that this cluster role is attached to, will be able to &ldquo;create, delete, get, list, watch, update&rdquo; these resources.</p>
+<p>I hope this brings some clarity and feel free to reach out if you have any specific questions that can&rsquo;t be looked up 😃.</p>
+
+      </div></div>
+
+  
+  
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <span>Everybody has a production environment, few are lucky enough to have a separate dev environment :)</span>
+  
+  </div>
+</footer>
+
+<script src="https://npsoni.com/assets/main.js"></script>
+<script src="https://npsoni.com/assets/prism.js"></script>
+
+
+
+
+
+
+ 
+  
+</div>
+
+</body>
+</html>

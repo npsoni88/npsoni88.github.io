@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   
-    <title>Tags :: SRE / DevOps references and thoughts</title>
+    <title>kubernetes :: SRE / DevOps references and thoughts</title>
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="" />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://npsoni.com/tags/" />
+<link rel="canonical" href="https://npsoni.com/categories/kubernetes/" />
 
 
 
@@ -40,9 +40,9 @@
 
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Tags">
+<meta property="og:title" content="kubernetes">
 <meta property="og:description" content="" />
-<meta property="og:url" content="https://npsoni.com/tags/" />
+<meta property="og:url" content="https://npsoni.com/categories/kubernetes/" />
 <meta property="og:site_name" content="SRE / DevOps references and thoughts" />
 
   
@@ -56,7 +56,7 @@
 
 
 
-  <link href="/tags/index.xml" rel="alternate" type="application/rss+xml" title="SRE / DevOps references and thoughts" />
+  <link href="/categories/kubernetes/index.xml" rel="alternate" type="application/rss+xml" title="SRE / DevOps references and thoughts" />
 
 
 
@@ -121,12 +121,49 @@
 
   <div class="content">
     
-  <div class="terms">
-    <h1>Tags</h1>
-    <ul>
-      
-      
-    </ul>
+  
+  <div class="posts">
+    
+      <div class="post on-list">
+        <h1 class="post-title">
+          <a href="https://npsoni.com/posts/custom-rbacs-kubernetes-persistent-volumes/">Creating custom roles in kubernetes for PersistentVolume access</a>
+        </h1>
+        <div class="post-meta">
+          <span class="post-date">
+            2021-03-19
+          </span>
+          
+        </div>
+
+        
+
+        
+
+        <div class="post-content">
+          
+          
+          Creating custom roles in kubernetes for different requirements =======================
+There are plenty of occassions when the default kubernetes/openshift roles / clusterroles don’t have the specific permissions that you need to assign to users. I recently faced similar situation where the development teams wanted to be able to setup their on PersistentVolumes and PersistentVolumeClaims. However, PersistentVolumes are cluster-scoped object so namespace-scoped users can’t actually interact with them.
+This was a business requirement so I had to setup a custom clusterrole that will let users setup their own persistentvolumes.
+          
+          
+        </div>
+
+        
+        <div>
+          <a class="read-more button"
+            href="/posts/custom-rbacs-kubernetes-persistent-volumes/">[Click To Continue Reading...] →</a>
+        </div>
+        
+      </div>
+    
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
   </div>
 
   </div>
