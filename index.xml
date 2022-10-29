@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Nishant Soni</title>
+    <link>https://npsoni.com/</link>
+    <description>Recent content on Nishant Soni</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 19 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://npsoni.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Creating custom roles in kubernetes for PersistentVolume access</title>
+      <link>https://npsoni.com/posts/custom-rbacs-kubernetes-persistent-volumes/</link>
+      <pubDate>Fri, 19 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://npsoni.com/posts/custom-rbacs-kubernetes-persistent-volumes/</guid>
+      <description>Creating custom roles in kubernetes for different requirements =======================
+There are plenty of occassions when the default kubernetes/openshift roles / clusterroles don&amp;rsquo;t have the specific permissions that you need to assign to users. I recently faced similar situation where the development teams wanted to be able to setup their on PersistentVolumes and PersistentVolumeClaims. However, PersistentVolumes are cluster-scoped object so namespace-scoped users can&amp;rsquo;t actually interact with them.
+This was a business requirement so I had to setup a custom clusterrole that will let users setup their own persistentvolumes.</description>
+    </item>
+    
+    <item>
+      <title>About Me</title>
+      <link>https://npsoni.com/about/</link>
+      <pubDate>Thu, 18 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://npsoni.com/about/</guid>
+      <description>Hello There! I am Nishant Soni, born and raised in Mumbai (India). I have about 13 years of experience in the information technology field. Here&amp;rsquo;s a quick gist of what I&amp;rsquo;ve been involved in over the number of years.
+12 years ago - Began my career as a Linux Administrator. I worked with a bunch of web hosting companies offering shared web hosting, virtual private servers and dedicated servers. Responsibilites were mostly to ensure that the servers are always up and running and help clients with their concerns with &amp;ldquo;how-tos&amp;rdquo; and the usual troubleshooting.</description>
+    </item>
+    
+  </channel>
+</rss>

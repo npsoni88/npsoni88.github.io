@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Nishant Soni</title>
+    <link>https://npsoni.com/posts/</link>
+    <description>Recent content in Posts on Nishant Soni</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 19 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://npsoni.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Creating custom roles in kubernetes for PersistentVolume access</title>
+      <link>https://npsoni.com/posts/custom-rbacs-kubernetes-persistent-volumes/</link>
+      <pubDate>Fri, 19 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://npsoni.com/posts/custom-rbacs-kubernetes-persistent-volumes/</guid>
+      <description>Creating custom roles in kubernetes for different requirements =======================
+There are plenty of occassions when the default kubernetes/openshift roles / clusterroles don&amp;rsquo;t have the specific permissions that you need to assign to users. I recently faced similar situation where the development teams wanted to be able to setup their on PersistentVolumes and PersistentVolumeClaims. However, PersistentVolumes are cluster-scoped object so namespace-scoped users can&amp;rsquo;t actually interact with them.
+This was a business requirement so I had to setup a custom clusterrole that will let users setup their own persistentvolumes.</description>
+    </item>
+    
+  </channel>
+</rss>

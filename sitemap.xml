@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://npsoni.com/posts/custom-rbacs-kubernetes-persistent-volumes/</loc>
+    <lastmod>2021-03-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npsoni.com/categories/</loc>
+    <lastmod>2021-03-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npsoni.com/categories/kubernetes/</loc>
+    <lastmod>2021-03-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npsoni.com/</loc>
+    <lastmod>2021-03-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npsoni.com/categories/openshift/</loc>
+    <lastmod>2021-03-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npsoni.com/posts/</loc>
+    <lastmod>2021-03-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npsoni.com/about/</loc>
+    <lastmod>2021-03-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npsoni.com/tags/</loc>
+  </url>
+</urlset>
